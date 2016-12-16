@@ -4,12 +4,52 @@
 		"selected_items":
 		[
 			[
-				"_mesh",
-				"_meshVertices"
+				"set",
+				"setIntegralPrecision	(AllCoordinatesR2.hpp)"
+			],
+			[
+				"num",
+				"numSamples"
+			],
+			[
+				"Thre",
+				"ThreePointsR2"
+			],
+			[
+				"coor",
+				"coordInd"
+			],
+			[
+				"Wa",
+				"WachspressR2"
+			],
+			[
+				"prin",
+				"print	(AllCoordinatesR2.hpp)"
+			],
+			[
+				"Ver",
+				"VertexR2	(main.cpp)"
+			],
+			[
+				"All",
+				"AllCoordinatesR2"
 			],
 			[
 				"_is",
-				"_isPolyLoaded"
+				"_isEdgeLengthSet"
+			],
+			[
+				"_i",
+				"_isEdgeLengthSet"
+			],
+			[
+				"Tr",
+				"TriangleCoordinatesR2"
+			],
+			[
+				"_mesh",
+				"_meshVertices"
 			],
 			[
 				"new",
@@ -18,10 +58,6 @@
 			[
 				"wra",
 				"wrapCoordinates"
-			],
-			[
-				"set",
-				"setTriangulation"
 			],
 			[
 				"Mesh",
@@ -68,10 +104,6 @@
 				"compute"
 			],
 			[
-				"Ver",
-				"VertexType"
-			],
-			[
 				"Tri",
 				"TriangulatorR2	(LaplaceR2.hpp)"
 			],
@@ -104,10 +136,6 @@
 				"pointwise/MeanValueR2"
 			],
 			[
-				"Tr",
-				"TriangleCoordinatesR2	(TriangleCoordinatesR2.hpp)"
-			],
-			[
 				"Po",
 				"PointwiseWrapperR2	(BarycentricWrapperR2.hpp)"
 			],
@@ -130,10 +158,6 @@
 			[
 				"Vert",
 				"VertexR2	(WachspressR2.hpp)"
-			],
-			[
-				"Wa",
-				"WachspressR2	(WachspressR2.hpp)"
 			],
 			[
 				"get",
@@ -320,10 +344,6 @@
 				"faceHandle"
 			],
 			[
-				"num",
-				"numberOfNeighbours"
-			],
-			[
 				"create",
 				"createHalfEdges	(geom_HarmonicCoordinates.hpp)"
 			],
@@ -494,26 +514,6 @@
 			[
 				"st",
 				"step"
-			],
-			[
-				"re",
-				"return"
-			],
-			[
-				"en",
-				"endif"
-			],
-			[
-				"aa",
-				"aa1"
-			],
-			[
-				"ev",
-				"evaluateSurface"
-			],
-			[
-				"spline",
-				"splineBase"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "2d/main.cpp",
 			"settings":
 			{
-				"buffer_size": 4029,
+				"buffer_size": 3475,
 				"line_ending": "Unix"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "2d/CMakeLists.txt",
 			"settings":
 			{
-				"buffer_size": 1626,
+				"buffer_size": 1623,
 				"line_ending": "Unix"
 			}
 		}
@@ -576,38 +576,40 @@
 	},
 	"file_history":
 	[
-		"/Users/danston/Documents/github/gbc/2d/CMakeLists.txt",
-		"/Users/danston/Documents/github/gbc/2d/coords/LocalR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/HarmonicR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/LbcSolver.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/DataTypes.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/DataSetup.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/PoissonR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/CubicMeanValueR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/WachspressR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/ThreePointsR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/SibsonR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/QuadraticProgrammingR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/PositiveMeanValueR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/PositiveGordonWixomR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/BilinearR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/MetricR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/MeanValueR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/MaximumEntropyR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/LaplaceR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/GordonWixomR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/DiscreteHarmonicR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/coords/AffineR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/AllCoordinatesR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/IsolinerR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/VertexR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/VertexExpressionsR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/TriangulatorR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/TriangleCoordinatesR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/SegmentCoordinatesR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/MeshR2.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/Halfedge.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/Face.hpp",
-		"/Users/danston/Documents/github/gbc/2d/extra/BarycentricWrapperR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/BarycentricCoordinatesR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/Face.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/Halfedge.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/MeshR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/HarmonicR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/LocalR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/PositiveGordonWixomR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/ThreePointsR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/GordonWixomR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/WachspressR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/LaplaceR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/SibsonR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/MaximumEntropyR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/AffineR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/PositiveMeanValueR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/CubicMeanValueR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/PoissonR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/MetricR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/BilinearR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/DiscreteHarmonicR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/MeanValueR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/BarycentricWrapperR2.hpp",
+		"/Users/danston/Documents/github/gbc/2d/CMakeLists.txt",
+		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/LbcSolver.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/DataTypes.hpp",
+		"/Users/danston/Documents/github/gbc/2d/extra/libs/lbcsolver/DataSetup.hpp",
+		"/Users/danston/Documents/github/gbc/2d/coords/QuadraticProgrammingR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/FaceR2.hpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/libs/quadprog/Array.cpp",
 		"/Users/danston/Documents/github/gbc/2d/extra/libs/quadprog/Array.hpp",
@@ -701,9 +703,7 @@
 		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/quadmesh.cpp",
 		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/quadmesh.hpp",
 		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/trimesh.cpp",
-		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/trimesh.hpp",
-		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/coordinates.hpp",
-		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/mesh.hpp"
+		"/Users/danston/Documents/Subdivision_framework/Bin/Subdivide/Fast_evaluation/src/trimesh.hpp"
 	],
 	"find":
 	{
@@ -722,6 +722,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"        ",
 			"Z_",
 			"_init",
 			"3",
@@ -848,8 +849,7 @@
 			"std::pow(w, 4)",
 			"std::pow(v, 3)",
 			"std::pow(v, 4)",
-			"std::pow(u, 3)",
-			"std::pow(u, 4)"
+			"std::pow(u, 3)"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -879,15 +879,15 @@
 					"file": "2d/main.cpp",
 					"settings":
 					{
-						"buffer_size": 4029,
+						"buffer_size": 3475,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3324,
-								3324
+								2247,
+								2247
 							]
 						],
 						"settings":
@@ -897,7 +897,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 791.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -907,15 +907,15 @@
 					"file": "2d/CMakeLists.txt",
 					"settings":
 					{
-						"buffer_size": 1626,
+						"buffer_size": 1623,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								902,
-								902
+								720,
+								720
 							]
 						],
 						"settings":
@@ -925,7 +925,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 38.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

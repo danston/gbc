@@ -32,6 +32,11 @@ namespace gbc {
         // Constructor.
         ThreePointsR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol), _p(1.0) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "ThreePointsR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // M. S. Floater, K. Hormann, and G. Kos. A general construction of barycentric coordinates over convex polygons.
         // Advances in Computational Mathematics, 24(1-4):311-331, 2006.
@@ -105,6 +110,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
         // Set power used in three-point coordinates.

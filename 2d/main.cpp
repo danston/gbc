@@ -23,47 +23,13 @@
     MyBarycentricClassR2 bary(square);
     bary.compute(centre, res);
 
-    See also an example below with my wrapper for your point class.
-
 */
 
 #include "./coords/MeanValueR2.hpp"
 #include "./coords/HarmonicR2.hpp"
-#include "./extra/BarycentricWrapperR2.hpp"
+
 #include "./extra/TriangulatorR2.hpp"
-#include "./extra/MeshR2.hpp"
-
-// Example of a custom point class for the wrapper used below.
-class YourPointClass {
-
-public:
-    // Constructor.
-    YourPointClass(const double x = 0.0, const double y = 0.0) : _x(x), _y(y) { }
-
-    // Return x coordinate.
-    inline double &x() {
-        return _x;
-    }
-
-    // Return const x coordinate.
-    inline double x() const {
-        return _x;
-    }
-
-    // Return y coordinate.
-    inline double &y() {
-        return _y;
-    }
-
-    // Return const y coordinate.
-    inline double y() const {
-        return _y;
-    }
-
-private:
-    // Coordinates x and y of the point.
-    double _x, _y;
-};
+#include "./extra/AllCoordinatesR2.hpp"
 
 // Example.
 int main() {
@@ -72,24 +38,34 @@ int main() {
 
 
     // Polygon.
-    std::vector<YourPointClass> square(4);
+    std::vector<VertexR2> poly(4);
 
-    square[0] = YourPointClass(0.0, 0.0);
-    square[1] = YourPointClass(1.0, 0.0);
-    square[2] = YourPointClass(1.0, 1.0);
-    square[3] = YourPointClass(0.0, 1.0);
+    poly[0] = VertexR2(0.0, 0.0);
+    poly[1] = VertexR2(1.0, 0.0);
+    poly[2] = VertexR2(1.0, 1.0);
+    poly[3] = VertexR2(0.0, 1.0);
+
+
+    // std::vector<VertexR2> poly(6);
+
+    // poly[0] = VertexR2(0.087272832224228, 0.554398725870316);
+    // poly[1] = VertexR2(0.199047453819107, 0.137461645317987);
+    // poly[2] = VertexR2(0.681629947054142, 0.066493631606953);
+    // poly[3] = VertexR2(0.857275780988953, 0.210203859371798);
+    // poly[4] = VertexR2(0.9, 0.4);
+    // poly[5] = VertexR2(0.784533566935143, 0.776173768717299);
 
 
     // Pointwise example.
 
     // Evaluation point.
-    YourPointClass centre(0.5001, 0.5001);
+    VertexR2 centre(0.5, 0.5);
 
     // Storage for the computed barycentric coordinates.
     std::vector<double> b;
 
     // Compute barycentric coordinates.
-    PointwiseWrapperR2<YourPointClass, MeanValueR2> pbc(square);
+    MeanValueR2 pbc(poly);
     pbc.compute(centre, b);
 
     // Output the resulting coordinates.
@@ -101,49 +77,26 @@ int main() {
     // Mesh-based example.
 
     // Evaluation points.
-    std::vector<VertexR2> sq(4);
-    for (size_t i = 0; i < 4; ++i)
-        sq[i] = VertexR2(square[i].x(), square[i].y());
-
     const double edgeLength = 0.05;
 
-    TriangulatorR2 tri(sq, edgeLength, true);
+    TriangulatorR2 tri(poly, edgeLength, true);
     tri.setPlanarGraph(true);
 
-    std::vector<VertexR2> tp;
-    std::vector<Face> tf;
+    std::vector<VertexR2> queries;
+    std::vector<Face> faces;
 
-    tri.generate(tp, tf);
-
-    MeshR2 mesh;
-    mesh.initialize(tp, tf);
-
-    // Here you can define your own set of the evaluation points.
-    // This set MUST EXCLUDE the polygon's vertices!
-    std::vector<YourPointClass> queries;
-
-    const size_t tps = tp.size();
-    assert(tps == mesh.numVertices());
-
-    for (size_t i = 0; i < tps; ++i) {
-        
-        if (mesh.vertices()[i].type == INTERIOR || 
-            mesh.vertices()[i].type == FLAT) {
-        
-            queries.push_back(YourPointClass(tp[i].x(), tp[i].y()));
-        }
-    }
+    tri.generate(queries, faces);
 
     // Storage for the computed barycentric coordinates.
     std::vector<std::vector<double> > bb;
 
     // Compute barycentric coordinates.
-    MeshbasedWrapperR2<YourPointClass, HarmonicR2> mbc(square);
-    // mbc.compute(queries, bb);
+    HarmonicR2 mbc(poly);
+    mbc.compute(queries, bb);
 
     // You can also compute the coordinates given some edgeLength
     // of the average triangle in the internal triangle mesh.
-    mbc.compute(edgeLength, bb);
+    // mbc.compute(edgeLength, bb);
 
     // Output the resulting coordinates.
     std::cout << "Mesh-based result: \n\n";
@@ -155,4 +108,18 @@ int main() {
         std::cout << std::endl;
     }
     std::cout << "\n";
+
+
+    // Example with all coordinates.
+    // Eps print all coordinate basis functions with the index coordInd in the path.
+    const size_t coordInd = 0;
+    const std::string path = "/Users/danston/Documents/github/gbc/2d/out/";
+
+    AllCoordinatesR2 all(poly);
+
+    all.setPower(0.5); // for three-point coordinates
+    all.setIntegralPrecision(100); // for Gordon-Wixom and positive Gordon-Wixom coordinates
+    all.setEdgeLength(edgeLength); // for local coordinates
+
+    all.print(path, queries, coordInd);
 }

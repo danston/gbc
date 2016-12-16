@@ -318,6 +318,11 @@ namespace gbc {
         // Constructors.
         PositiveMeanValueR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "PositiveMeanValueR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // Y. Lipman, J. Kopf, D. Cohen-Or, and D. Levin. GPU-assisted positive mean value coordinates for mesh deformations.
         // In Proceedings of SGP 2007, Eurographics Symposium Proceedings, pages 117-123, 2007. A Belyaev and M. Garland editors.
@@ -364,6 +369,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

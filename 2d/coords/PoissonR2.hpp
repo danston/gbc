@@ -90,6 +90,11 @@ namespace gbc {
         // Constructor.
         PoissonR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "PoissonR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // X.-Y. Li and S.-M. Hu. Poisson coordinates.
         // IEEE Transactions on Visualization and Computer Graphics, 19(2):344-352, 2013.
@@ -132,6 +137,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

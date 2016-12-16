@@ -36,6 +36,11 @@ namespace gbc {
             assert(v.size() == 4);
         }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "BilinearR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // M. S. Floater. Generalized barycentric coordinates and applications.
         // Acta Numerica, 24:161-214, 2015 (see Section 3).
@@ -109,6 +114,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
         // Evaluate bilinear functions x * y, (1 - x) * y, (1 - x) * (1 - y), and x * (1 - y) at p on a unit square.

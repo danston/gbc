@@ -47,6 +47,11 @@ namespace gbc {
         // Constructor.
         LaplaceR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol), _mesh() { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "LaplaceR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // N. Sukumar. Voronoi cell finite difference method for the diffusion operator on arbitrary unstructured grids.
         // International Journal for Numerical Methods in Engineering, 57(1):1-34, 2003.
@@ -129,6 +134,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

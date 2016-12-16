@@ -12,11 +12,6 @@
     This code also depends on the external triangulation library:
     Triangle, https://www.cs.cmu.edu/~quake/triangle.html
 
-    If you do not want to use the VertexR2 class, then your Vertex/Point class has to implement the following functions:
-    1. x() - returns x coordinate of the vertex
-    2. y() - returns y coordinate of the vertex
-    3. Scalar product: u.scalarProduct(v)
-
 */
 
 #ifndef GBC_TRIANGULATOR2_HPP

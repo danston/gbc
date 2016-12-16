@@ -43,6 +43,11 @@ namespace gbc {
         // Constructor.
         PositiveGordonWixomR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol), _numSamples(1024) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "PositiveGordonWixomR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // J. Manson, K. Li, and S. Schaefer. Positive Gordon-Wixom coordinates.
         // Computer-Aided Design, 43(11):1422-1426, 2011.
@@ -81,8 +86,15 @@ namespace gbc {
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
         }
 
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
+        }
+
         // Set number of samples used in the numerical integration.
         inline void setIntegralPrecision(const size_t numSamples) {
+            
+            assert(numSamples > 0);
             _numSamples = numSamples;
         }
 

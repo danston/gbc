@@ -32,6 +32,11 @@ namespace gbc {
         // Constructor.
         DiscreteHarmonicR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "DiscreteHarmonicR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // U. Pinkall and K. Polthier. Computing discrete minimal surfaces and their conjugates.
         // Experimental Mathematics, 2(1):15-36, 1993.
@@ -84,6 +89,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

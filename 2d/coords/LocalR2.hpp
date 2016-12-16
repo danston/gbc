@@ -34,6 +34,7 @@
 // Local includes.
 #include "../extra/VertexR2.hpp"
 #include "../extra/BarycentricCoordinatesR2.hpp"
+#include "../extra/TriangleCoordinatesR2.hpp"
 
 // Libs.
 #include "../extra/libs/eigen/Eigen/Core"
@@ -58,10 +59,12 @@ namespace gbc {
             setPolygon();
         }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "LocalR2";
+        }
+
         // Function that computes coordinates bb at all points p.
-        // The number of returned coordinates is the number of the polygon's vertices + the number of the points p +
-        // the number of the points generated along the boundary.
-        // The points p MUST EXCLUDE the polygon's vertices _v, they will be added automatically (see above)!
         void compute(const std::vector<VertexR2> &p, std::vector<std::vector<double> > &bb) {
 
             // Create internal triangle mesh.
@@ -88,6 +91,25 @@ namespace gbc {
 
             // Wrap computed coordinates in the vector bb.
             wrapCoordinates(bb);
+        }
+
+        // Compute coordinates at all points p in the vector using the internal storage from the VertexR2 class.
+        // Note that here the function returns a slightly different set of points p from the given one.
+        void compute(std::vector<VertexR2> &p) {
+
+            // Create internal triangle mesh.
+            createMesh(p);
+
+            // Compute coordinates.
+            lbc_solver();
+
+            // Wrap vertices with coordinates.
+            wrapVertices(p);
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
         // Evaluate coordinates b at any point p.
@@ -124,8 +146,8 @@ namespace gbc {
                     const size_t n = _v.size();
                     b.resize(n, 0.0);
 
-                    assert(_b.rows() == _meshVertices.cols());
-                    assert(_b.cols() == _v.size());
+                    assert(_meshVertices.cols() == _b.rows());
+                    assert(_v.size()  ==  (size_t) _b.cols());
 
                     for (size_t j = 0; j < n; ++j)
                         b[j] = lambda[0] * _b(i0, j) + lambda[1] * _b(i1, j) + lambda[2] * _b(i2, j);
@@ -160,7 +182,11 @@ namespace gbc {
 
         // Set the average edge length for the boundary refinement.
         inline void setEdgeLength(const double newEdgeLength) {
+
+            assert(newEdgeLength > 0.0);
+            
             _edgeLength = newEdgeLength;
+            _isEdgeLengthSet = true;
         }
 
         // Indicate if we want to output the solver progress or not.
@@ -223,6 +249,29 @@ namespace gbc {
             }
         }
 
+        // Return new set of vertices with the corresponding coordinates
+        // using the internal coordinate storage from the class VertexR2.
+        void wrapVertices(std::vector<VertexR2> &p) const {
+
+            const size_t n = _v.size();
+            const size_t N = _meshVertices.cols();
+
+            p.clear();
+            p.resize(N);
+
+            assert(N == (size_t) _b.rows());
+            assert(_v.size() == (size_t) _b.cols());
+
+            for (size_t i = 0; i < N; ++i) {
+
+                p[i].x() = _meshVertices(0, i);
+                p[i].y() = _meshVertices(1, i);
+
+                p[i].b().resize(n, 0.0);
+                for (size_t j = 0; j < n; ++j) p[i].b()[j] = _b(i, j);
+            }
+        }
+
         // Set vertices of the given polygon.
         void setPolygon() {
 
@@ -240,17 +289,20 @@ namespace gbc {
         }
 
         // Given a set of points p, create the internal triangle mesh.
-        // This set MUST EXCLUDE the polygon's vertices!
         // For this code the prefered edge length for the boundary
         // refinement is also necessary!
         void createMesh(const std::vector<VertexR2> &p) {
 
-            assert(!p.empty());
             assert(_isEdgeLengthSet);
             assert(_edgeLength > 0.0);
 
             std::vector<VertexR2> poly;
             refinePolygon(poly);
+
+            assert(!p.empty());
+
+            std::vector<VertexR2> tmp;
+            clean(p, poly, tmp);
 
             std::vector<VertexR2> tp;
             std::vector<Face> tf;
@@ -262,7 +314,7 @@ namespace gbc {
             tri.allowBoundaryRefinement(false);
             tri.allowEdgeRefinement(false);
 
-            tri.setPoints(p);
+            tri.setPoints(tmp);
             tri.generate(tp, tf);
 
             setTriangulation(tp, tf);
@@ -311,6 +363,26 @@ namespace gbc {
                     VertexR2 vert = _v[i] + (double(j) / double(numS)) * (_v[ip] - _v[i]);
                     poly.push_back(vert);
                 }
+            }
+        }
+
+        // Clean mesh from the polygon's vertices if any.
+        void clean(const std::vector<VertexR2> &p,
+                   const std::vector<VertexR2> &poly,
+                   std::vector<VertexR2> &tmp) const {
+
+            assert(!p.empty());
+
+            const size_t n = poly.size();
+            const size_t N = p.size();
+            
+            for (size_t i = 0; i < N; ++i) {
+
+                size_t count = 0;
+                for (size_t j = 0; j < n; ++j)
+                    if (p[i] != poly[j]) count++;
+
+                if (count == n) tmp.push_back(p[i]);
             }
         }
 

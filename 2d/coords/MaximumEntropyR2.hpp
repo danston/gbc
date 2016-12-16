@@ -189,6 +189,11 @@ namespace gbc {
         // Constructor.
         MaximumEntropyR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "MaximumEntropyR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // K. Hormann and N. Sukumar. Maximum entropy coordinates for arbitrary polytopes.
         // Computer Graphics Forum, 27(5):1513-1520, 2008.
@@ -257,6 +262,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

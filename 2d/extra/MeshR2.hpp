@@ -11,10 +11,6 @@
     4. Face.hpp
     5. Halfedge.hpp
 
-    If you do not want to use the VertexR2 class, then your Vertex/Point class has to implement the following functions:
-    1. x() - returns x coordinate of the vertex
-    2. y() - returns y coordinate of the vertex
-
 */
 
 #ifndef GBC_MESH_HPP
@@ -28,10 +24,10 @@
 #include <map>
 
 // Local includes.
-#include "../extra/VertexR2.hpp"
-#include "../extra/TriangleCoordinatesR2.hpp"
-#include "../extra/Face.hpp"
-#include "../extra/Halfedge.hpp"
+#include "VertexR2.hpp"
+#include "TriangleCoordinatesR2.hpp"
+#include "Face.hpp"
+#include "Halfedge.hpp"
 
 namespace gbc {
 

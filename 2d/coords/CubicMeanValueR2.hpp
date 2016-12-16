@@ -37,6 +37,11 @@ namespace gbc {
         // Constructor.
         CubicMeanValueR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "CubicMeanValueR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // X.-Y. Li, T. Ju, and S.-M. Hu. Cubic mean value coordinates.
         // ACM Transactions on Graphics, 32(4):126:1-10, 2013.
@@ -81,12 +86,12 @@ namespace gbc {
         }
 
         // Compute the coordinates at p using the internal storage from the VertexR2 class.
-        inline void compute(VertexR2 &p) const {
+        inline void compute(VertexR2 &p) {
             compute(p, p.b());
         }
 
         // Compute coordinates bb at all points p in the vector.
-        void compute(const std::vector<VertexR2> &p, std::vector<std::vector<double> > &bb) const {
+        void compute(const std::vector<VertexR2> &p, std::vector<std::vector<double> > &bb) {
 
             const size_t numP = p.size();
             
@@ -95,10 +100,15 @@ namespace gbc {
         }
 
         // Compute coordinates at all points p in the vector using the internal storage from the VertexR2 class.
-        void compute(std::vector<VertexR2> &p) const {
+        void compute(std::vector<VertexR2> &p) {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
         // Return all coefficients associated with cubic mean value coordinates.

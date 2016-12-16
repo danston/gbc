@@ -32,6 +32,11 @@ namespace gbc {
         // Constructor.
         MetricR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) : super(v, tol) { }
 
+        // Return name of the coordinate function.
+        inline std::string name() const {
+            return "MetricR2";
+        }
+
         // Function that computes coordinates b at a point p. This implementation is based on the following paper:
         // K. Hormann and M. S. Floater. Mean value coordinates for arbitrary planar polygons.
         // ACM Transactions on Graphics, 25(4):1424-1441, 2006 (see Section 3).
@@ -122,6 +127,11 @@ namespace gbc {
 
             const size_t numP = p.size();
             for (size_t i = 0; i < numP; ++i) compute(p[i], p[i].b());
+        }
+
+        // Implementation of the virtual function to compute all coordinates.
+        inline void bc(std::vector<VertexR2> &p) {
+            compute(p);
         }
 
     private:

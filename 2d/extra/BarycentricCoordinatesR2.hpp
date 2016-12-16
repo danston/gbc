@@ -29,10 +29,17 @@ namespace gbc {
 
     public:
         // Constructor.
-        BarycentricCoordinatesR2(const std::vector<VertexR2> &v, const double tol) : _v(v), _tol(tol) {
+        BarycentricCoordinatesR2(const std::vector<VertexR2> &v, const double tol) 
+        : _v(v), _tol(tol) {
             
             assert(!_v.empty());
         }
+
+        // This is a virtual function that is used to compute all coordinate classes at the same time.
+        virtual void bc(std::vector<VertexR2> &p) = 0; 
+
+        // Return name of the current coordinate function.
+        virtual std::string name() const = 0;
 
     protected:
         // Vertices of the polygon.
