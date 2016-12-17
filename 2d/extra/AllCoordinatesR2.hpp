@@ -19,6 +19,7 @@
 
 // Local includes.
 #include "IsolinerR2.hpp"
+#include "BarycentricCoordinatesR2.hpp"
 
 #include "../coords/WachspressR2.hpp"
 #include "../coords/DiscreteHarmonicR2.hpp"

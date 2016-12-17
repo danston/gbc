@@ -31,6 +31,7 @@
 #include "./extra/MeshR2.hpp"
 #include "./extra/TriangulatorR2.hpp"
 #include "./extra/AllCoordinatesR2.hpp"
+#include "./extra/TestCoordinatesR2.hpp"
 
 // Example.
 int main() {
@@ -72,12 +73,12 @@ int main() {
 
     // Refine the polygon to create regular mesh.
     std::vector<VertexR2> refined;
-    const size_t numV = poly.size();
+    const size_t n = poly.size();
 
-    for (size_t i = 0; i < numV; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         refined.push_back(poly[i]);
 
-        const size_t ip = (i + 1) % numV;
+        const size_t ip = (i + 1) % n;
         const size_t numS = ceil((poly[ip] - poly[i]).length() / edgeLength);
 
         for (size_t j = 1; j < numS; ++j) {
@@ -96,10 +97,10 @@ int main() {
 
     tri.generate(queries, faces);
 
-    // Clean mesh from the polygon vertices.
     MeshR2 mesh;
     mesh.initialize(queries, faces);
 
+    // Clean mesh from the polygon vertices.
     std::vector<VertexR2> cleaned;
     for (size_t i = 0; i < mesh.numVertices(); ++i) {
         if (mesh.vertices()[i].type == INTERIOR || mesh.vertices()[i].type == FLAT)
@@ -146,6 +147,10 @@ int main() {
 
     // Test some properties.
 
-    // TestCoordinates test(poly);
-    // test.make();
+    std::cout << "Test coordinates:\n";
+
+    TestCoordinatesR2 test;
+    test.make();
+    
+    std::cout << "\n";
 }
