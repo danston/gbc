@@ -4,12 +4,13 @@
 // README:
 /*
 
-    This class depends on five other classes that can be found in the extra folder:
+    This class depends on six other classes that can be found in the extra folder:
     1. BarycentricCoordinatesR2.hpp
     2. SegmentCoordinatesR2.hpp
     3. VertexExpressionsR2.hpp
     4. VertexR2.hpp
     5. MeshR2.hpp
+    6. Face.hpp
 
     This code also depends on the external triangulation library:
     Triangle, https://www.cs.cmu.edu/~quake/triangle.html
@@ -27,6 +28,7 @@
 #include <cassert>
 
 // Local includes.
+#include "../extra/Face.hpp"
 #include "../extra/VertexR2.hpp"
 #include "../extra/BarycentricCoordinatesR2.hpp"
 #include "../extra/MeshR2.hpp"
@@ -46,7 +48,7 @@ namespace gbc {
     public:
         // Constructor.
         HarmonicR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) 
-        : super(v, tol), _isMeshCreated(false), _areCoordinatesComputed(false) { }
+        : super(v, tol), _isMeshCreated(false), _areCoordinatesComputed(false), _isMeshGiven(false) { }
 
         // Return name of the coordinate function.
         inline std::string name() const {
@@ -54,6 +56,7 @@ namespace gbc {
         }
 
         // Function that computes coordinates bb at all points p.
+        // Here the set of points p must exclude the polygon's vertices _v.
         void compute(const std::vector<VertexR2> &p, std::vector<std::vector<double> > &bb) {
 
             // Create internal triangle mesh.
@@ -80,21 +83,28 @@ namespace gbc {
         // Note that here the function returns a slightly different set of points p from the given one.
         void compute(std::vector<VertexR2> &p) {
 
-            // Create internal triangle mesh.
-            createMesh(p);
-
-            std::vector<std::vector<double> > bb;
-
             // Compute coordinates.
-            computeCoordinates(bb);
+            std::vector<std::vector<double> > bb;
+            compute(p, bb);
 
             // Wrap vertices with coordinates.
             p = _mesh.vertices();
         }
 
         // Implementation of the virtual function to compute all coordinates.
+        // Here the set of points p must exclude the polygon's vertices _v 
+        // apart from the case when the given mesh is used.
         inline void bc(std::vector<VertexR2> &p) {
-            compute(p);
+            
+            // Create internal triangle mesh.
+            if (!_isMeshGiven) createMesh(p);
+
+            // Compute coordinates.
+            std::vector<std::vector<double> > bb;
+            computeCoordinates(bb);
+
+            // Wrap vertices with coordinates.
+            p = _mesh.vertices();
         }
 
         // Evaluate coordinates b at any point p.
@@ -150,9 +160,22 @@ namespace gbc {
             for (size_t i = 0; i < numP; ++i) evaluate(p[i], p[i].b());
         }
 
+        // Set mesh if any.
+        void setMesh(const std::vector<VertexR2> &tp, const std::vector<Face> &tf) {
+
+            _mesh.clear();
+            _mesh.initialize(tp, tf);
+
+            _isMeshGiven = true;
+            _isMeshCreated = false;
+        }
+
         // Clear.
         inline void clear() {
+            
             _mesh.clear();
+
+            _isMeshGiven = false;
             _isMeshCreated = false;
             _areCoordinatesComputed = false;
         }
@@ -170,14 +193,12 @@ namespace gbc {
         // Flags.
         bool _isMeshCreated;
         bool _areCoordinatesComputed;
+        bool _isMeshGiven;
 
         // Given a set of points p, create the internal triangle mesh.
         void createMesh(const std::vector<VertexR2> &p) {
 
             assert(!p.empty());
-
-            std::vector<VertexR2> tmp;
-            clean(p, tmp);
 
             std::vector<VertexR2> tp;
             std::vector<Face> tf;
@@ -189,12 +210,13 @@ namespace gbc {
             tri.allowBoundaryRefinement(false);
             tri.allowEdgeRefinement(false);
 
-            tri.setPoints(tmp);
+            tri.setPoints(p);
             tri.generate(tp, tf);
 
             _mesh.clear();
             _mesh.initialize(tp, tf);
 
+            _isMeshGiven = false;
             _isMeshCreated = true;
         }
 
@@ -214,25 +236,8 @@ namespace gbc {
             _mesh.clear();
             _mesh.initialize(tp, tf);
 
+            _isMeshGiven = false;
             _isMeshCreated = true;
-        }
-
-        // Clean mesh from the polygon's vertices if any.
-        void clean(const std::vector<VertexR2> &p, std::vector<VertexR2> &tmp) const {
-
-            assert(!p.empty());
-
-            const size_t n = _v.size();
-            const size_t N =  p.size();
-            
-            for (size_t i = 0; i < N; ++i) {
-
-                size_t count = 0;
-                for (size_t j = 0; j < n; ++j)
-                    if (p[i] != _v[j]) count++;
-
-                if (count == n) tmp.push_back(p[i]);
-            }
         }
 
         // Compute coordinates. This implementation is based on the following paper:
@@ -240,7 +245,7 @@ namespace gbc {
         // ACM Transactions on Graphics, 26(3):71:1-9, 2007.
         void computeCoordinates(std::vector<std::vector<double> > &bb) {
 
-            assert(_isMeshCreated);
+            assert(_isMeshCreated || _isMeshGiven);
 
             // Boundary and interior.
             const size_t n = _v.size();

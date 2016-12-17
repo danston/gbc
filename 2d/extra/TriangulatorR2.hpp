@@ -157,17 +157,17 @@ namespace gbc {
         // Check if point is on the boundary.
         bool inline isOnBoundary(const VertexR2 &p) const {
 
-            const int n = (int) _v.size();
-            for (int i = 0; i < n; ++i)
+            const size_t n = _v.size();
+            for (size_t i = 0; i < n; ++i)
                 if (isOnSegment(i, p)) return true;
             return false;
         }
 
         // Check if point is on the boundary segment with index i.
-        bool inline isOnSegment(const int i, const VertexR2 &p) const {
+        bool inline isOnSegment(const size_t i, const VertexR2 &p) const {
 
-            const int n = (int) _v.size();
-            const int ip = (i + 1) % n;
+            const size_t n  = _v.size();
+            const size_t ip = (i + 1) % n;
 
             const VertexR2 &v1 = _v[i];
             const VertexR2 &v2 = _v[ip];
@@ -225,6 +225,7 @@ namespace gbc {
             }
 
             for (int i = n; i < N; ++i) {
+
                 in.pointlist[2 * i] = _p[i - n].x();
                 in.pointlist[2 * i + 1] = _p[i - n].y();
                 in.pointmarkerlist[i] = isOnBoundary(_p[i - n]) ? 1 : 0;
@@ -235,7 +236,7 @@ namespace gbc {
         }
 
         // Assign flags and triangulate.
-        void triangulate(Triangulateio &mid, Triangulateio &out) {
+        void triangulate(Triangulateio &mid, Triangulateio &out) const {
 
             out.pointlist = (double *) NULL;
             out.pointmarkerlist = (int *) NULL;
@@ -280,7 +281,7 @@ namespace gbc {
         }
 
         // Set/save vertices and faces obtained from Triangle.
-        void setTriangulation(Triangulateio &tri, std::vector<VertexR2> &v, std::vector<Face> &f) {
+        void setTriangulation(Triangulateio &tri, std::vector<VertexR2> &v, std::vector<Face> &f) const {
 
             v.clear();
             f.clear();
@@ -304,7 +305,7 @@ namespace gbc {
         }
 
         // Free memory.
-        void freeIn(Triangulateio &in) {
+        void freeIn(Triangulateio &in) const {
 
             free(in.pointlist);
             free(in.pointmarkerlist);
@@ -315,7 +316,7 @@ namespace gbc {
             if (_recordOrder) free(in.pointattributelist);    
         }
 
-        void freeOut(Triangulateio &out) {
+        void freeOut(Triangulateio &out) const {
 
             free(out.pointlist);
             free(out.pointmarkerlist);

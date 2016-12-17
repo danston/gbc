@@ -57,7 +57,7 @@ namespace LBC {
                 data_points_(data_setup.get_LBC_solver_data_points()),
                 grad_weights_(data_setup.get_LBC_solver_grad_weights()),
                 G_(data_setup.get_LBC_solver_grad_operator()), E_(data_setup.get_LBC_solver_grad_const()),
-                has_init_coord_(false), start_time_(0.0), end_time_(0.0) {
+                has_init_coord_(false), start_time_(0.0), end_time_(0.0), verbose_(false) {
 
             init();
         }
@@ -114,6 +114,10 @@ namespace LBC {
             show_elapsed_time();
         }
 
+        inline void showOutput(const bool verbose) {
+            verbose_ = verbose;
+        }
+
     protected:
 
         // Solver parameters.
@@ -162,6 +166,9 @@ namespace LBC {
 
         // Timer variables.
         double start_time_, end_time_;
+
+        // Verbose.
+        bool verbose_;
 
         // Are the initial data valid?
         bool valid_init_data_;
@@ -467,16 +474,16 @@ namespace LBC {
 
                     optimization_end_ = optimization_converge_ || iter_num >= param_.max_iterations;
 
-                    if (optimization_converge_) {
+                    if (optimization_converge_ && verbose_) {
 
                         std::cout << "Solver converged!\n" << std::endl;
 
-                    } else if (optimization_end_) {
+                    } else if (optimization_end_ && verbose_) {
 
                         std::cout << "Maximum iteration reached!\n" << std::endl;
                     }
 
-                    if (output_progress_ || optimization_end_) {
+                    if ((output_progress_ || optimization_end_) && verbose_) {
 
                         std::cout << "Iteration " << iter_num << ":" << std::endl;
 

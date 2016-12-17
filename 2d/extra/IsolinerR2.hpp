@@ -4,11 +4,10 @@
 // README:
 /*
 
-    This class depends on four other classes that can be found in the extra folder:
+    This class depends on three other classes that can be found in the extra folder:
     1. VertexExpressionsR2.hpp
     2. VertexR2.hpp
     3. Face.hpp
-    4. MeshR2.hpp
 
 */
 
@@ -23,7 +22,6 @@
 // Local includes.
 #include "Face.hpp"
 #include "VertexR2.hpp"
-#include "MeshR2.hpp"
 
 namespace gbc {
 
@@ -98,7 +96,7 @@ namespace gbc {
     public:
         // Constructor.
         IsolinerR2(const std::vector<VertexR2> &v, const std::vector<Face> &f, const size_t coordInd = 0)
-                : _v(v), _f(f), _coordInd(coordInd), _tol(1.0e-10) {}
+                : _v(v), _f(f), _coordInd(coordInd), _tol(1.0e-10) { }
 
         // Function that extracts isolines.
         void getContours(const std::vector<double> &isoValues, std::vector<std::vector<std::list<VertexR2> > > &contours) {
@@ -158,6 +156,34 @@ namespace gbc {
             connectIsopieces(p, result);
         }
 
+        // Convert a binary number to decimal.
+        inline long binary2Decima(long bin) const {
+
+            long dec = 0, base = 1, rem;
+            while (bin > 0) {
+
+                rem = bin % 10;
+                dec += rem * base;
+                base *= 2;
+                bin /= 10;
+            }
+
+            return dec;
+        }
+
+        // Convert values from the vector with bools to a long number.
+        inline long vector2Long(const std::vector<bool> &vec) {
+
+            long result;
+            std::stringstream ss;
+
+            const size_t size = vec.size();
+            for (size_t i = 0; i < size; ++i) ss << vec[i];
+
+            ss >> result;
+            return result;
+        }
+
         // Create binary index.
         void createBinaryIndex(const double isoValue, std::vector<bool> &binInd) const {
             
@@ -166,7 +192,7 @@ namespace gbc {
 
             for (size_t i = 0; i < numV; ++i) {
 
-                if (_v[i].phi()[_coordInd] < isoValue) binInd[i] = 0;
+                if (_v[i].b()[_coordInd] < isoValue) binInd[i] = 0;
                 else binInd[i] = 1;
             }
         }
@@ -191,8 +217,8 @@ namespace gbc {
             const VertexR2 &v1 = _v[_f[faceInd].v[e.first]];
             const VertexR2 &v2 = _v[_f[faceInd].v[e.second]];
 
-            const double f1 = v1.phi()[_coordInd];
-            const double f2 = v2.phi()[_coordInd];
+            const double f1 = v1.b()[_coordInd];
+            const double f2 = v2.b()[_coordInd];
 
             const double denom = f2 - f1;
 

@@ -54,7 +54,13 @@ namespace gbc {
     public:
         // Constructor.
         LocalR2(const std::vector<VertexR2> &v, const double tol = 1.0e-10) 
-        : super(v, tol), _edgeLength(-1.0), _isPolyLoaded(false), _isMeshCreated(false), _areCoordinatesComputed(false), _showOutput(false), _isEdgeLengthSet(false) {
+        : super(v, tol), _edgeLength(-1.0), 
+        _isPolyLoaded(false), 
+        _isMeshGiven(false), 
+        _isMeshCreated(false), 
+        _areCoordinatesComputed(false), 
+        _isEdgeLengthSet(false),
+        _verbose(false) {
 
             setPolygon();
         }
@@ -65,6 +71,7 @@ namespace gbc {
         }
 
         // Function that computes coordinates bb at all points p.
+        // Here the set of points p must exclude the polygon's vertices _v.
         void compute(const std::vector<VertexR2> &p, std::vector<std::vector<double> > &bb) {
 
             // Create internal triangle mesh.
@@ -95,6 +102,7 @@ namespace gbc {
 
         // Compute coordinates at all points p in the vector using the internal storage from the VertexR2 class.
         // Note that here the function returns a slightly different set of points p from the given one.
+        // Here the set of points p must exclude the polygon's vertices _v.
         void compute(std::vector<VertexR2> &p) {
 
             // Create internal triangle mesh.
@@ -108,8 +116,18 @@ namespace gbc {
         }
 
         // Implementation of the virtual function to compute all coordinates.
+        // Here the set of points p must exclude the polygon's vertices _v 
+        // apart from the case when the given mesh is used.
         inline void bc(std::vector<VertexR2> &p) {
-            compute(p);
+            
+            // Create internal triangle mesh.
+            if (!_isMeshGiven) createMesh(p);
+
+            // Compute coordinates.
+            lbc_solver();
+
+            // Wrap vertices with coordinates.
+            wrapVertices(p);
         }
 
         // Evaluate coordinates b at any point p.
@@ -180,6 +198,15 @@ namespace gbc {
             for (size_t i = 0; i < numP; ++i) evaluate(p[i], p[i].b());
         }
 
+        // Set mesh if any.
+        void setMesh(const std::vector<VertexR2> &tp, const std::vector<Face> &tf) {
+
+            setTriangulation(tp, tf);
+
+            _isMeshGiven = true;
+            _isMeshCreated = false;
+        }
+
         // Set the average edge length for the boundary refinement.
         inline void setEdgeLength(const double newEdgeLength) {
 
@@ -191,8 +218,8 @@ namespace gbc {
 
         // Indicate if we want to output the solver progress or not.
         // The default is false.
-        inline void showOutput(const bool newState) {
-            _showOutput = newState;
+        inline void showOutput(const bool verbose) {
+            _verbose = verbose;
         }
 
         // Clear all internal data structures.
@@ -204,8 +231,10 @@ namespace gbc {
             _b.resize(0, 0);
 
             _isPolyLoaded = false;
+            _isMeshGiven = false;
             _isMeshCreated = false;
             _areCoordinatesComputed = false;
+            _isEdgeLengthSet = false;
         }
 
     private:
@@ -227,10 +256,11 @@ namespace gbc {
 
         // Flags.
         bool _isPolyLoaded;
+        bool _isMeshGiven;
         bool _isMeshCreated;
         bool _areCoordinatesComputed;
-        bool _showOutput;
         bool _isEdgeLengthSet;
+        bool _verbose;
 
         // Return the obtained coordinates.
         void wrapCoordinates(std::vector<std::vector<double> > &bb) const {
@@ -301,9 +331,6 @@ namespace gbc {
 
             assert(!p.empty());
 
-            std::vector<VertexR2> tmp;
-            clean(p, poly, tmp);
-
             std::vector<VertexR2> tp;
             std::vector<Face> tf;
 
@@ -314,11 +341,12 @@ namespace gbc {
             tri.allowBoundaryRefinement(false);
             tri.allowEdgeRefinement(false);
 
-            tri.setPoints(tmp);
+            tri.setPoints(p);
             tri.generate(tp, tf);
 
             setTriangulation(tp, tf);
 
+            _isMeshGiven = false;
             _isMeshCreated = true;
         }
 
@@ -343,6 +371,7 @@ namespace gbc {
 
             setTriangulation(tp, tf);
 
+            _isMeshGiven = false;
             _isMeshCreated = true;
         }
 
@@ -363,26 +392,6 @@ namespace gbc {
                     VertexR2 vert = _v[i] + (double(j) / double(numS)) * (_v[ip] - _v[i]);
                     poly.push_back(vert);
                 }
-            }
-        }
-
-        // Clean mesh from the polygon's vertices if any.
-        void clean(const std::vector<VertexR2> &p,
-                   const std::vector<VertexR2> &poly,
-                   std::vector<VertexR2> &tmp) const {
-
-            assert(!p.empty());
-
-            const size_t n = poly.size();
-            const size_t N = p.size();
-            
-            for (size_t i = 0; i < N; ++i) {
-
-                size_t count = 0;
-                for (size_t j = 0; j < n; ++j)
-                    if (p[i] != poly[j]) count++;
-
-                if (count == n) tmp.push_back(p[i]);
             }
         }
 
@@ -421,17 +430,10 @@ namespace gbc {
                         const double primal_residual_tolerance = 0.0000001, // default is 0.0000001
                         const double dual_residual_tolerance = 0.000001) { // default is 0.000001
 
-            if (!_isPolyLoaded) {
-                std::cerr << "Error: polygon is not loaded!" << std::endl;
-                return;
-            }
+            assert(_isPolyLoaded);
+            assert(_isMeshCreated || _isMeshGiven);
 
-            if (!_isMeshCreated) {
-                std::cerr << "Error: no mesh provided!" << std::endl;
-                return;
-            }
-
-            if (_showOutput) std::cout << "Setting up input data" << std::endl;
+            if (_verbose) std::cout << "Setting up input data..." << std::endl;
 
             LBC::DenseMatrix sample_points = _meshVertices.block(0, 0, 2, _meshVertices.cols());
             LBC::DenseIndexMatrix &cell_vertices = _meshFaces;
@@ -490,19 +492,20 @@ namespace gbc {
 
             param.convergence_check_frequency = 10;
 
-            if (_showOutput) param.output_frequency_ratio = 10;
+            if (_verbose) param.output_frequency_ratio = 10;
             else param.output_frequency_ratio = max_iter;
 
             param.use_timer = false;
 
             // Interior.
             LBC::LBCSolver solver(param, ds);
+            solver.showOutput(_verbose);
 
-            std::cout << "LBC Solver started:\n" << std::endl;
+            if (_verbose) std::cout << "LBC Solver started:\n" << std::endl;
 
             solver.solve();
 
-            std::cout << "Computation finished!\n" << std::endl;
+            if (_verbose) std::cout << "Computation finished!\n" << std::endl;
 
             _b = ds.get_full_coordinate_values(solver.get_coordinates());
             _areCoordinatesComputed = true;

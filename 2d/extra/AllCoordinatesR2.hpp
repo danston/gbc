@@ -50,16 +50,15 @@ namespace gbc {
 
         // Print coordinates.
         void print(const std::string &path,
-                   const std::vector<VertexR2> &p, 
+                   std::vector<VertexR2> &tp,
+                   const std::vector<Face> &tf, 
                    const size_t coordInd = 0) {
 
-            std::vector<VertexR2> tmp(p);
-
-            const double scale = 1000.0;
-
+            // Set all coordinate classes.
             std::vector<BarycentricCoordinatesR2 *> all;
 
             all.push_back(new WachspressR2(_v, _tol));
+
             all.push_back(new DiscreteHarmonicR2(_v, _tol));
             all.push_back(new MeanValueR2(_v, _tol));
 
@@ -68,7 +67,9 @@ namespace gbc {
             all.push_back(tpc);
 
             all.push_back(new MetricR2(_v, _tol));
-            all.push_back(new BilinearR2(_v, _tol));
+            
+            if (_v.size() == 4) all.push_back(new BilinearR2(_v, _tol));
+            
             all.push_back(new PoissonR2(_v, _tol));
             all.push_back(new CubicMeanValueR2(_v, _tol));
             
@@ -84,32 +85,40 @@ namespace gbc {
             all.push_back(new MaximumEntropyR2(_v, _tol));
             all.push_back(new AffineR2(_v, _tol));
 
-            // all.push_back(new LaplaceR2(_v, _tol)); // does not work
-            // all.push_back(new SibsonR2(_v, _tol)); // does not work
+            all.push_back(new LaplaceR2(_v, _tol));
+            all.push_back(new SibsonR2(_v, _tol));
             
-            // all.push_back(new HarmonicR2(_v, _tol)); // does not work
+            HarmonicR2* hmc = new HarmonicR2(_v, _tol);
+            hmc->setMesh(tp, tf);
+            all.push_back(hmc);
 
-            // LocalR2* lbc = new LocalR2(_v, _tol); // does not work
-            // lbc->setEdgeLength(_edgeLength);
-            // all.push_back(lbc);
+            LocalR2* lbc = new LocalR2(_v, _tol);
+            lbc->setEdgeLength(_edgeLength);
+            lbc->setMesh(tp, tf);
+            all.push_back(lbc);
 
+            // Set iso values for the contour extraction from the coordinate basis function.
             std::vector<double> isoValues(9);
             for (size_t i = 0; i < 9; ++i)
                 isoValues[i] = double(i + 1) * 0.1;
 
             std::vector<std::vector<std::list<VertexR2> > > contours;
 
-            // IsolinerR2 iso(p, coordInd);
+            const double scale = 300.0;
 
+            // Compute coordinates, create contours and plot them.
+            std::cout << "Illustrating coordinates...\n";
             const size_t k = all.size();
             for (size_t i = 0; i < k; ++i) {
 
-                all[i]->bc(tmp);
+                all[i]->bc(tp);
 
-                // iso.getContours(isoValues, contours);
-                saveEps(path, all[i]->name(), coordInd, contours, scale);
+                IsolinerR2 iso(tp, tf, coordInd);
+                iso.getContours(isoValues, contours);
+
+                saveEps(path, all[i]->name(), contours, scale);
             }
-            std::cout << "\n";
+            std::cout << "...finished!\n\n";
         }
 
         // Set some parameters used in the coordinate classes.
@@ -142,10 +151,10 @@ namespace gbc {
         double _edgeLength;
 
         // Save eps with contours.
-        void saveEps(const std::string &path, const std::string &name, const size_t coordInd, 
-                     const std::vector<std::vector<std::list<VertexR2> > > &contours, const double scale) const {
+        void saveEps(const std::string &path, const std::string &name,
+                     const std::vector<std::vector<std::list<VertexR2> > > &contours, double scale) const {
 
-            std::cout << "\n" << name << "\n";
+            std::cout << name << "\n";
 
             assert(_v.size() != 0);
 
@@ -166,7 +175,7 @@ namespace gbc {
             VertexR2 minB, maxB;
             boundingBox(minB, maxB);
 
-            if ((maxB - minB).length() < 10.0 && scale == 1.0) scale *= 1000;
+            if ((maxB - minB).length() < 10.0 && scale == 1.0) scale *= 1000.0;
 
             // Header.
             setHeader(minB.x() * scale, minB.y() * scale, maxB.x() * scale, maxB.y() * scale, saver, "contours");
@@ -177,12 +186,12 @@ namespace gbc {
             // Save polygon with contours.
 
             // Save polygon.
-            drawConnectedPath(saver, true, scale, Color(0, 0, 0));
-            drawScatteredPoints(saver, scale, Color(0, 0, 0));
+            drawPolygon(saver, scale);
+            drawPolygonVertices(saver, 1.0, scale);
 
             // Save contours.
             const size_t numC = contours.size();
-            for (size_t i = 0; i < numC; ++i) drawContours(contours[i], saver, scale, Color(0, 0, 0));
+            for (size_t i = 0; i < numC; ++i) drawContours(saver, contours[i], scale);
 
             // Finish private namespace.
             saver << "grestore end\n\n";
@@ -190,6 +199,119 @@ namespace gbc {
 
             // Close the file.
             saver.close();
+        }
+
+        // Set eps header.
+        void setHeader(const double llx, const double lly, const double urx, const double ury,
+                       std::ofstream &ostr, const std::string &title) const {
+
+            ostr << "%!PS-Adobe-3.0 EPSF-3.0\n";
+
+            ostr << "%%BoundingBox: " << llx << " " << lly << " " << urx << " " << ury << "\n";
+
+            ostr << "%%Pages: 1\n";
+
+            ostr << "%%Creator: Dmitry Anisimov, danston@ymail.com\n";
+
+            ostr << "%%Title: " << title.c_str() << "\n";
+
+            ostr << "%%EndComments\n";
+
+            ostr << "%%EndProlog\n\n";
+
+            ostr << "%%Page: 1 1\n\n";
+        }
+
+        // Draw a polygon.
+        void drawPolygon(std::ofstream &ostr, const double scale = 1.0) const {
+
+            const size_t numV = _v.size();
+
+            ostr << _v[0].x() * scale << " " << _v[0].y() * scale << " moveto\n";
+            for (size_t i = 1; i < numV; ++i) ostr << _v[i].x() * scale << " " << _v[i].y() * scale << " lineto\n";
+
+            ostr << _v[0].x() * scale << " " << _v[0].y() * scale << " lineto\n\n";
+            ostr << "closepath\n\n";
+
+            ostr << 0.0 << " setgray\n";
+            ostr << "1 setlinewidth\n";
+            ostr << "stroke\n\n";
+        }
+
+        // Draw the polygon's vertices.
+        void drawPolygonVertices(std::ofstream &ostr, const double radius = 1.0, const double scale = 1.0) const {
+
+            const size_t numV = _v.size();
+            for (size_t i = 0; i < numV; ++i) drawDisc(ostr, _v[i], radius, scale);
+        }
+
+        // Draw a filled disc.
+        void drawDisc(std::ofstream &ostr,
+                      const VertexR2 &center,
+                      const double radius,
+                      const double scale = 1.0) const {
+
+            ostr << 0.0 << " setgray\n";
+            ostr << "0 setlinewidth\n\n";
+
+            ostr << center.x() * scale << " " << center.y() * scale << " " << radius << " 0 360 arc closepath\n\n";
+            ostr << "gsave\n";
+
+            ostr << 0.0 << " setgray fill\n";
+
+            ostr << "grestore\n";
+            ostr << "stroke\n\n";
+        }
+
+        // Draw contours.
+        void drawContours(std::ofstream &ostr,
+                          const std::vector<std::list<VertexR2> > &p,
+                          const double scale = 1.0,
+                          const double lineWidth = 1.0,
+                          const bool dashed = false) const {
+
+            const size_t numP = p.size();
+
+            for (size_t i = 0; i < numP; ++i) {
+
+                typename std::list<VertexR2>::const_iterator it = p[i].begin();
+
+                ostr << it->x() * scale << " " << it->y() * scale << " moveto\n";
+                ++it;
+
+                for (; it != p[i].end(); ++it) ostr << it->x() * scale << " " << it->y() * scale << " lineto\n";
+
+                ostr << 0.0 << " setgray\n";
+
+                if (dashed) ostr << "[4 1] 0 setdash\n";
+                else ostr << "[] 0 setdash\n";
+
+                ostr << lineWidth << " setlinewidth\n";
+                ostr << "stroke\n\n";
+            }
+        }
+
+        // Compute bounding box of the set of points.
+        void boundingBox(VertexR2 &minB, VertexR2 &maxB) const {
+
+            const size_t n = _v.size();
+
+            double minX = std::numeric_limits<double>::max();
+            double minY = std::numeric_limits<double>::max();
+
+            double maxX = -std::numeric_limits<double>::max();
+            double maxY = -std::numeric_limits<double>::max();
+
+            for (size_t i = 0; i < n; ++i) {
+
+                minX = std::min(minX, _v[i].x());
+                maxX = std::max(maxX, _v[i].x());
+                minY = std::min(minY, _v[i].y());
+                maxY = std::max(maxY, _v[i].y());
+            }
+
+            minB = VertexR2(minX, minY);
+            maxB = VertexR2(maxX, maxY);
         }
     };
 

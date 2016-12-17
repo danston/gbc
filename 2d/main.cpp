@@ -28,6 +28,7 @@
 #include "./coords/MeanValueR2.hpp"
 #include "./coords/HarmonicR2.hpp"
 
+#include "./extra/MeshR2.hpp"
 #include "./extra/TriangulatorR2.hpp"
 #include "./extra/AllCoordinatesR2.hpp"
 
@@ -40,20 +41,10 @@ int main() {
     // Polygon.
     std::vector<VertexR2> poly(4);
 
-    poly[0] = VertexR2(0.0, 0.0);
+    poly[0] = VertexR2(0.1, 0.1);
     poly[1] = VertexR2(1.0, 0.0);
-    poly[2] = VertexR2(1.0, 1.0);
-    poly[3] = VertexR2(0.0, 1.0);
-
-
-    // std::vector<VertexR2> poly(6);
-
-    // poly[0] = VertexR2(0.087272832224228, 0.554398725870316);
-    // poly[1] = VertexR2(0.199047453819107, 0.137461645317987);
-    // poly[2] = VertexR2(0.681629947054142, 0.066493631606953);
-    // poly[3] = VertexR2(0.857275780988953, 0.210203859371798);
-    // poly[4] = VertexR2(0.9, 0.4);
-    // poly[5] = VertexR2(0.784533566935143, 0.776173768717299);
+    poly[2] = VertexR2(0.9, 0.9);
+    poly[3] = VertexR2(0.2, 1.0);
 
 
     // Pointwise example.
@@ -79,7 +70,25 @@ int main() {
     // Evaluation points.
     const double edgeLength = 0.05;
 
-    TriangulatorR2 tri(poly, edgeLength, true);
+    // Refine the polygon to create regular mesh.
+    std::vector<VertexR2> refined;
+    const size_t numV = poly.size();
+
+    for (size_t i = 0; i < numV; ++i) {
+        refined.push_back(poly[i]);
+
+        const size_t ip = (i + 1) % numV;
+        const size_t numS = ceil((poly[ip] - poly[i]).length() / edgeLength);
+
+        for (size_t j = 1; j < numS; ++j) {
+
+            VertexR2 vert = poly[i] + (double(j) / double(numS)) * (poly[ip] - poly[i]);
+            refined.push_back(vert);
+        }
+    }
+
+    // Create mesh.
+    TriangulatorR2 tri(refined, edgeLength, true);
     tri.setPlanarGraph(true);
 
     std::vector<VertexR2> queries;
@@ -87,12 +96,23 @@ int main() {
 
     tri.generate(queries, faces);
 
+    // Clean mesh from the polygon vertices.
+    MeshR2 mesh;
+    mesh.initialize(queries, faces);
+
+    std::vector<VertexR2> cleaned;
+    for (size_t i = 0; i < mesh.numVertices(); ++i) {
+        if (mesh.vertices()[i].type == INTERIOR || mesh.vertices()[i].type == FLAT)
+            cleaned.push_back(mesh.vertices()[i]);
+    }
+
     // Storage for the computed barycentric coordinates.
     std::vector<std::vector<double> > bb;
 
     // Compute barycentric coordinates.
+    // Here the set of points must exclude the polygon's vertices.
     HarmonicR2 mbc(poly);
-    mbc.compute(queries, bb);
+    mbc.compute(cleaned, bb);
 
     // You can also compute the coordinates given some edgeLength
     // of the average triangle in the internal triangle mesh.
@@ -111,15 +131,21 @@ int main() {
 
 
     // Example with all coordinates.
-    // Eps print all coordinate basis functions with the index coordInd in the path.
+
+    // Print coordinates in eps.
     const size_t coordInd = 0;
     const std::string path = "/Users/danston/Documents/github/gbc/2d/out/";
 
     AllCoordinatesR2 all(poly);
 
-    all.setPower(0.5); // for three-point coordinates
+    all.setPower(0.5);             // for three-point coordinates
     all.setIntegralPrecision(100); // for Gordon-Wixom and positive Gordon-Wixom coordinates
     all.setEdgeLength(edgeLength); // for local coordinates
 
-    all.print(path, queries, coordInd);
+    all.print(path, queries, faces, coordInd);
+
+    // Test some properties.
+
+    // TestCoordinates test(poly);
+    // test.make();
 }

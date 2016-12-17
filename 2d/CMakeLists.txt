@@ -26,6 +26,7 @@ set(SRC
         extra/MeshR2.hpp
         extra/TriangulatorR2.hpp
         extra/IsolinerR2.hpp
+        extra/TestCoordinates.hpp
         extra/libs/gaussinteg/gauss_legendre.hpp
         extra/libs/gaussinteg/gauss_legendre.cpp
         extra/libs/triangle/triangle.hpp
