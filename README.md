@@ -9,29 +9,29 @@ This package includes:
 __1. Pointwise coordinates:__
 
 A. Coordinates for polygons:
-    * Bilinear coordinates
-    * Wachspress coordinates
-    * Discrete harmonic coordinates
-    * Mean value coordinates
-    * Positive mean value coordinates
-    * Cubic mean value coordinates
-    * Three-point coordinates
-    * Metric coordinates
-    * Poisson coordinates
-    * Gordon-Wixom coordinates
-    * Positive Gordon-Wixom coordinates
-    * Maximum entropy coordinates
+  * Bilinear coordinates
+  * Wachspress coordinates
+  * Discrete harmonic coordinates
+  * Mean value coordinates
+  * Positive mean value coordinates
+  * Cubic mean value coordinates
+  * Three-point coordinates
+  * Metric coordinates
+  * Poisson coordinates
+  * Gordon-Wixom coordinates
+  * Positive Gordon-Wixom coordinates
+  * Maximum entropy coordinates
     
 B. Coordinates for scattered points:
-    * Affine coordinates
-    * Sibson coordinates
-    * Laplace coordinates
+  * Affine coordinates
+  * Sibson coordinates
+  * Laplace coordinates
 
 __2. Mesh-based coordinates:__
 
 A. Coordinates for polygons:
-    * Harmonic coordinates
-    * Local barycentric coordinates
+  * Harmonic coordinates
+  * Local barycentric coordinates
 
 I tried to keep the code as stand alone as possible, but many classes still have quite a few dependencies. However, all these dependencies are included in the package and do not require any special treatment like building or compiling. At the beginning of each file I also indicate which dependencies the corresponding class has.
 
