@@ -1,5 +1,4 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // Some examples on how to use the coordinate classes.
 
@@ -18,13 +17,16 @@
 
     VertexR2 centre(YourPointClass.x(), YourPointClass.y());
 
-    std::vector<double> res;
+    std::vector<double> result;
 
     MyBarycentricClassR2 bary(square);
-    bary.compute(centre, res);
+    bary.compute(centre, result);
+
+    Below you can find other examples. For more information see README.md.
 
 */
 
+// Local includes
 #include "./coords/MeanValueR2.hpp"
 #include "./coords/HarmonicR2.hpp"
 
@@ -33,7 +35,7 @@
 #include "./extra/AllCoordinatesR2.hpp"
 #include "./extra/TestCoordinatesR2.hpp"
 
-// Example.
+// Examples.
 int main() {
 
     using namespace gbc;
@@ -48,7 +50,7 @@ int main() {
     poly[3] = VertexR2(0.2, 1.0);
 
 
-    // Pointwise example.
+    // 1. Pointwise example.
 
     // Evaluation point.
     VertexR2 centre(0.5, 0.5);
@@ -56,7 +58,7 @@ int main() {
     // Storage for the computed barycentric coordinates.
     std::vector<double> b;
 
-    // Compute barycentric coordinates.
+    // Compute mean value coordinates.
     MeanValueR2 pbc(poly);
     pbc.compute(centre, b);
 
@@ -66,9 +68,9 @@ int main() {
     std::cout << "\n\n";
 
 
-    // Mesh-based example.
+    // 2. Mesh-based example.
 
-    // Evaluation points.
+    // Create evaluation points.
     const double edgeLength = 0.05;
 
     // Refine the polygon to create regular mesh.
@@ -110,8 +112,8 @@ int main() {
     // Storage for the computed barycentric coordinates.
     std::vector<std::vector<double> > bb;
 
-    // Compute barycentric coordinates.
-    // Here the set of points must exclude the polygon's vertices.
+    // Compute harmonic coordinates.
+    // Here the set of points must exclude the polygon's vertices!
     HarmonicR2 mbc(poly);
     mbc.compute(cleaned, bb);
 
@@ -120,7 +122,7 @@ int main() {
     // mbc.compute(edgeLength, bb);
 
     // Output the resulting coordinates.
-    std::cout << "Mesh-based result: \n\n";
+    std::cout << "Mesh-based result: \n";
     for (size_t i = 0; i < bb.size(); ++i) {
 
         for (size_t j = 0; j < bb[i].size(); ++j)
@@ -131,12 +133,15 @@ int main() {
     std::cout << "\n";
 
 
-    // Example with all coordinates.
-
-    // Print coordinates in eps.
+    // 3. Example with all coordinates, where we print them in eps.
+    
+    // Index of the printed basis function.
     const size_t coordInd = 0;
-    const std::string path = "/Users/danston/Documents/github/gbc/2d/out/";
 
+    // Change to your path here!
+    const std::string path = "/Users/path_to_the_folder/gbc/2d/out/";
+
+    // Compute and draw all coordinates.
     AllCoordinatesR2 all(poly);
 
     all.setPower(0.5);             // for three-point coordinates
@@ -145,8 +150,8 @@ int main() {
 
     all.print(path, queries, faces, coordInd);
 
-    // Test some properties.
 
+    // 4. Example, where we test different properties of barycentric coordinates.
     std::cout << "Test coordinates:\n";
 
     TestCoordinatesR2 test;

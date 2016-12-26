@@ -1,10 +1,11 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on three other classes that can be found in the extra folder:
+    This is the base class for all generalized barycentric coordinates.
+
+    This class depends on:
     1. SegmentCoordinatesR2.hpp
     2. VertexExpressionsR2.hpp
     3. VertexR2.hpp

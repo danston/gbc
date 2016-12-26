@@ -1,10 +1,9 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This is an example of how to run my code for all coordinate classes at the same time.
+    This is an example on how to run my code for all coordinate classes at the same time.
 
 */
 
@@ -202,7 +201,7 @@ namespace gbc {
             saver.close();
         }
 
-        // Set eps header.
+        // Set the eps header.
         void setHeader(const double llx, const double lly, const double urx, const double ury,
                        std::ofstream &ostr, const std::string &title) const {
 

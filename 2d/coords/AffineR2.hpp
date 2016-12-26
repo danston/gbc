@@ -1,10 +1,11 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on four other classes that can be found in the extra folder:
+    Affine generalized barycentric coordinates.
+
+    This class depends on:
     1. BarycentricCoordinatesR2.hpp
     2. SegmentCoordinatesR2.hpp
     3. VertexExpressionsR2.hpp

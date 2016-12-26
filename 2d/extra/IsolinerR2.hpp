@@ -1,10 +1,11 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on three other classes that can be found in the extra folder:
+    Here we extract contours from the given basis function using the marching triangle approach.
+
+    This class depends on:
     1. VertexExpressionsR2.hpp
     2. VertexR2.hpp
     3. Face.hpp
@@ -229,7 +230,8 @@ namespace gbc {
             p.push_back((1.0 - t) * v1 + t * v2);
         }
 
-        // Connect isopieces.
+        // Connect isopieces. This function can be avoided, but then all the computed pieces will be unordered
+        // and it wont be possible to simplify the final contours in Adobe Illustrator e.g.
         void connectIsopieces(const std::vector<VertexR2> &p, std::vector<std::list<VertexR2> > &result) const {
 
             result.clear();

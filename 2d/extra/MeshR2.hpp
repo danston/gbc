@@ -1,10 +1,11 @@
-// Authors: Kai Hormann and Dmitry Anisimov, danston@ymail.com.
-// Copyright Kai Hormann && Dmitry Anisimov (c) 2016.
+// Copyright Kai Hormann and Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on five other classes that can be found in the extra folder:
+    Implementation of the triangle/quad mesh in R2.
+
+    This class depends on:
     1. VertexExpressionsR2.hpp
     2. VertexR2.hpp
     3. TriangleCoordinatesR2.hpp
@@ -351,7 +352,7 @@ namespace gbc {
                 if (_he[i].neigh < 0) {
 
                     // NOTE: boundary vertices have one more neighbour than the outgoing edges.
-                    destV->type = FLAT; // Flat vertices
+                    destV->type = FLAT; // FLAT vertices, that is collinear
                     destV->val++;
                 }
             }

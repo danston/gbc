@@ -1,10 +1,11 @@
-// Author: Teseo Schneider and Dmitry Anisimov, danston@ymail.com.
-// Copyright Teseo Schneider && Dmitry Anisimov (c) 2016.
+// Copyright Teseo Schneider and Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on three other classes that can be found in the extra folder:
+    Wrapper for the Triangle library to compute Delaunay triangulation of the given polygon.
+
+    This class depends on:
     1. VertexExpressionsR2.hpp
     2. VertexR2.hpp
     3. Face.hpp

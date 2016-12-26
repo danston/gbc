@@ -1,15 +1,14 @@
 // Authors: Xian-Ying Li and Shi-Min Hu, http://cg.cs.tsinghua.edu.cn/people/~xianying/
-// Updated by: Dmitry Anisimov, danston@ymail.com.
-// Copyright Xian-Ying Li, Shi-Min Hu, Dmitry Anisimov (c) 2016.
+// Updated by: Dmitry Anisimov danston@ymail.com.
+// Copyright Xian-Ying Li, Shi-Min Hu, and Dmitry Anisimov (c) 2016-2017.
 
 // README:
 /*
 
+    Poisson coordinates and related data structures.
+
     This code was originally written by Xian-Ying Li and Shi-Min Hu. I modified this code to fit my framework
     with different generalized barycentric coordinates.
-
-    You also have to substitute any appearance of my VertexR2 with your Point/Vertex class
-    and remove the function compute(std::vector<VertexR2> &p);
 
 */
 

@@ -1,10 +1,11 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on one other class that can be found in the extra folder:
+    This is the vertex data structure.
+
+    This class depends:
     1. VertexExpressionsR2.hpp
 
 */

@@ -1,11 +1,13 @@
 // Authors: Juyong Zhang, Bailin Deng, Zishun Liu, Giuseppe Patane, Sofien Bouaziz, Kai Hormann, and Ligang Liu, https://github.com/bldeng/LBC
-// Updated by: Dmitry Anisimov, danston@ymail.com.
-// Copyright Juyong Zhang, Bailin Deng, Zishun Liu, Giuseppe Patane, Sofien Bouaziz, Kai Hormann, Ligang Liu, Dmitry Anisimov (c) 2016.
+// Updated by: Dmitry Anisimov danston@ymail.com.
+// Copyright Juyong Zhang, Bailin Deng, Zishun Liu, Giuseppe Patane, Sofien Bouaziz, Kai Hormann, Ligang Liu, and Dmitry Anisimov (c) 2016-2017.
 
 // README:
 /*
 
-    This class depends on five other classes that can be found in the extra folder:
+    Local barycentric coordinates.
+
+    This class depends on:
     1. BarycentricCoordinatesR2.hpp
     2. SegmentCoordinatesR2.hpp
     3. VertexExpressionsR2.hpp

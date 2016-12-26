@@ -1,14 +1,16 @@
 // Authors: Xian-Ying Li, Tao Ju, and Shi-Min Hu, http://cg.cs.tsinghua.edu.cn/people/~xianying/
-// Updated by: Dmitry Anisimov, danston@ymail.com.
-// Copyright Xian-Ying Li, Tao Ju, Shi-Min Hu, Dmitry Anisimov (c) 2016.
+// Updated by: Dmitry Anisimov danston@ymail.com.
+// Copyright Xian-Ying Li, Tao Ju, Shi-Min Hu, and Dmitry Anisimov (c) 2016-2017.
 
 // README:
 /*
 
+    Cubic mean value coordinates.
+
     This code was originally written by Xian-Ying Li, Tao Ju, and Shi-Min Hu. I modified this code to fit my framework
     with different generalized barycentric coordinates.
 
-    This class depends on four other classes that can be found in the extra folder:
+    This class depends on:
     1. BarycentricCoordinatesR2.hpp
     2. SegmentCoordinatesR2.hpp
     3. VertexExpressionsR2.hpp

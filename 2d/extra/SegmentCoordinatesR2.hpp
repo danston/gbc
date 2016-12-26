@@ -1,10 +1,11 @@
-// Author: Dmitry Anisimov, danston@ymail.com.
-// Copyright Dmitry Anisimov (c) 2016.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
 
 // README:
 /*
 
-    This class depends on two other classes that can be found in the extra folder:
+    Barycentric coordinates along a line.
+
+    This class depends on:
     1. VertexExpressionsR2.hpp
     2. VertexR2.hpp
 
