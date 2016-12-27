@@ -119,3 +119,7 @@ This package allows you to save the coordinate functions in the eps format, for 
 
 **_Harmonic coordinates_**  
 ![Harmonic coordinates](2d/examples/HarmonicR2.png)
+
+### Bugs
+
+Please note that some parts of this code are not optimized and may bug. I only tested it for the specific cases that I used during the last years of my Ph.D. That is why, if you find any bugs, please report them to me, and I will try to fix them as soon as possible!
