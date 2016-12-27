@@ -93,11 +93,11 @@ VertexR2 centre(0.5, 0.5);
 std::vector<double> b;
 
 // Compute mean value coordinates.
-MeanValueR2 pbc(poly);
-pbc.compute(centre, b);
+MeanValueR2 mvc(poly);
+mvc.compute(centre, b);
 
 // Output the resulting coordinates.
-std::cout << "\nPointwise result: ";
+std::cout << "\nMean value coordinates: ";
 for (size_t i = 0; i < b.size(); ++i) std::cout << b[i] << " ";
 std::cout << "\n\n";
 ```
@@ -108,6 +108,14 @@ std::cout << "\n\n";
 
 This package allows you to save the coordinate functions in the eps format, for example:
 
-|Wachspress coordinates|Mean value coordinates|Metric coordinates|Harmonic coordinates|
-|----------------------|----------------------|----------------------|----------------------|
-|![Wachspress coordinates](2d/examples/WachspressR2.png)|![Mean value coordinates](2d/examples/MeanValueR2.png)|![Metric coordinates](2d/examples/MetricR2.png)|![Harmonic coordinates](2d/examples/HarmonicR2.png)|
+**_Wachspress coordinates_**  
+![Wachspress coordinates](2d/examples/WachspressR2.png)
+
+**_Mean value coordinates_**  
+![Mean value coordinates](2d/examples/MeanValueR2.png)
+
+**_Metric coordinates_**  
+![Metric coordinates](2d/examples/MetricR2.png)
+
+**_Harmonic coordinates_**  
+![Harmonic coordinates](2d/examples/HarmonicR2.png)
