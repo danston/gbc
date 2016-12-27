@@ -39,7 +39,7 @@ I tried to keep the code as stand alone as possible, but many classes still have
 
 ### Run the code
 
-In order to run the code do the following:
+In order to run the code, do the following:
 
 1. Install [macports](https://www.macports.org/install.php)
 2. Open main.cpp and edit the path to the folder with images on the line 142
