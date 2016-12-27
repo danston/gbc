@@ -73,7 +73,7 @@ For the release version use instead:
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-##### NOTE: If the output result shows FAILED for some tests, it is ok. It happens because those coordinates miss some theoretical properties.
+##### NOTE: If the output result shows FAILED for some tests, it is ok. It happens because the corresponding coordinate functions do not satisfy some theoretical properties of generalized barycentric coordinates.
 
 ### Simple example
 
