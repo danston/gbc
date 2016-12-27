@@ -1,4 +1,4 @@
-// Copyright Teseo Schneider and Dmitry Anisimov danston@ymail.com (c) 2016-2107.
+// Copyright Teseo Schneider and Dmitry Anisimov danston@ymail.com (c) 2016-2017.
 
 // README:
 /*

@@ -1,3 +1,5 @@
+# Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2017.
+
 # Open terminal
 # cd path_to_the_folder/2d/bin/
 # cmake -DCMAKE_BUILD_TYPE=Debug .. or cmake -DCMAKE_BUILD_TYPE=Release ..

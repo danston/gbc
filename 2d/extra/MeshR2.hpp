@@ -1,4 +1,4 @@
-// Copyright Kai Hormann and Dmitry Anisimov danston@ymail.com (c) 2016-2107.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2017.
 
 // README:
 /*

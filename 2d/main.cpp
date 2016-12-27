@@ -1,4 +1,4 @@
-// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2107.
+// Copyright Dmitry Anisimov danston@ymail.com (c) 2016-2017.
 
 // Some examples on how to use the coordinate classes.
 
