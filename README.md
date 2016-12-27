@@ -1,4 +1,4 @@
-# Generalized barycentric coordinates (GBC)
+# Generalized barycentric coordinates (GBC) Ver. 1.0.2
 
 ### Description
 
