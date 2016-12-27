@@ -73,7 +73,7 @@ For the release version use instead:
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-##### NOTE: If the output result shows FAILED for some tests, it is ok. It happens because the corresponding coordinate functions do not satisfy some theoretical properties of generalized barycentric coordinates.
+##### NOTE: If the output result shows FAILED for some tests, it is ok. It happens because the corresponding coordinate functions do not satisfy some theoretical properties of generalized barycentric coordinates!
 
 ### Simple example
 
@@ -102,7 +102,7 @@ for (size_t i = 0; i < b.size(); ++i) std::cout << b[i] << " ";
 std::cout << "\n\n";
 ```
 
-##### NOTE: For more examples see main.cpp.
+##### NOTE: For more examples see main.cpp!
 
 ### Visual output
 
