@@ -212,6 +212,25 @@ namespace gbc {
             return -1;
         }
 
+        // Get halfedges that are shared between the face with the index faceInd
+        // and its neighbouring faces.
+        // The function returns the number of obtained neighbours.
+        size_t getNeighbours(const size_t faceInd, std::vector<size_t> &neighs) const {
+
+            assert(numFaces() != 0);
+
+            int heInd = (int) faceInd * 3;
+            if (heInd >= 0 && _he[heInd].neigh != -1) neighs.push_back((size_t) heInd);
+
+            heInd = _he[heInd].next;
+            if (heInd >= 0 && _he[heInd].neigh != -1) neighs.push_back((size_t) heInd);
+
+            heInd = _he[heInd].next;
+            if (heInd >= 0 && _he[heInd].neigh != -1) neighs.push_back((size_t) heInd);
+
+            return neighs.size();
+        }
+
         // Internal data.
 
         // Return vertices of the mesh.
