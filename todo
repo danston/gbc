@@ -1,0 +1,2 @@
+1. Fix C_i area computation in all related coordinates, e.g. Wachspress and metric coordinates.
+2. Add #include <fstream> to AllCoordinatesR2.hpp and maybe to IsolinerR2.hpp.

@@ -26,7 +26,7 @@
 
 */
 
-// Local includes
+// Local includes.
 #include "./coords/MeanValueR2.hpp"
 #include "./coords/HarmonicR2.hpp"
 
@@ -114,6 +114,7 @@ int main() {
 
     // Compute harmonic coordinates.
     // Here the set of points must exclude the polygon's vertices!
+    // Excluding the polygon's vertices is necessary only for Harmonic and Local coordinates!
     HarmonicR2 mbc(poly);
     mbc.compute(cleaned, bb);
 
