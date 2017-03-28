@@ -61,6 +61,7 @@ namespace gbc {
             std::vector<double> r(n);
 
             for (size_t i = 0; i < n; ++i) {
+
                 s[i] = _v[i] - p;
                 r[i] = s[i].length();
             }
@@ -126,6 +127,7 @@ namespace gbc {
             std::vector<double> r(n);
 
             for (size_t i = 0; i < n; ++i) {
+                
                 s[i] = _v[i] - p;
                 r[i] = s[i].length();
             }

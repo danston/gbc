@@ -59,6 +59,7 @@ namespace gbc {
             std::vector<VertexR2> e(n);
 
             for (size_t i = 0; i < n; ++i) {
+
                 const size_t ip = (i + 1) % n;
 
                 s[i] = _v[i] - p;
@@ -69,6 +70,7 @@ namespace gbc {
             std::vector<double> C(n);
 
             for (size_t i = 0; i < n; ++i) {
+
                 const size_t im = (i + n - 1) % n;
 
                 for (size_t j = 0; j < n; ++j) {
@@ -86,7 +88,7 @@ namespace gbc {
             double W = 0.0;
 
             for (size_t i = 0; i < n; ++i) {
-
+                
                 w[i] = C[i] * A[i];
                 W += w[i];
             }
@@ -101,6 +103,10 @@ namespace gbc {
         // M. Meyer, H. Lee, A. Barr, and M. Desbrun. Generalized barycentric coordinates on irregular polygons.
         // Journal of Graphics Tools, 7(1):13-22, 2002.
         void computeFast(const VertexR2 &p, std::vector<double> &b) const {
+
+            // Uncomment two lines below to use an alternative way to compute Wachspress coordinates:
+            // computeFastAlternative(p, b);
+            // return;
 
             b.clear();
 
@@ -182,6 +188,60 @@ namespace gbc {
         // Compute cotangent.
         double cotangent(const VertexR2 &a, const VertexR2 &b) const {
             return a.scalarProduct(b) / fabs(a.crossProduct(b));
+        }
+
+        // Alternative computation of Wachspress coordinates with the O(n) performance.
+        void computeFastAlternative(const VertexR2 &p, std::vector<double> &b) const {
+
+            b.clear();
+
+            const size_t n = _v.size();
+            b.resize(n, 0.0);
+
+            // Boundary.
+            if (computeBoundaryCoordinates(p, b)) return;
+
+            // Interior.
+            std::vector<VertexR2> s(n);
+            std::vector<VertexR2> e(n);
+
+            for (size_t i = 0; i < n; ++i) {
+
+                const size_t ip = (i + 1) % n;
+
+                s[i] = _v[i] - p;
+                e[i] = _v[ip] - _v[i];
+            }
+
+            std::vector<double> A(n);
+            std::vector<double> C(n);
+
+            for (size_t i = 0; i < n; ++i) {
+
+                const size_t im = (i + n - 1) % n;
+                const size_t ip = (i + 1) % n;
+
+                A[i] = 0.5 * s[i].crossProduct(s[ip]);
+                C[i] = 0.5 * e[i].crossProduct(-e[im]);
+            }
+
+            std::vector<double> w(n);
+            double W = 0.0;
+
+            for (size_t i = 0; i < n; ++i) {
+                
+                const size_t im = (i + n - 1) % n;
+
+                assert(fabs(A[im] * A[i]) > 0.0);
+
+                w[i] = C[i] / (A[im] * A[i]);
+                W += w[i];
+            }
+
+            assert(fabs(W) > 0.0);
+            const double invW = 1.0 / W;
+
+            for (size_t i = 0; i < n; ++i) b[i] = w[i] * invW;
         }
     };
 

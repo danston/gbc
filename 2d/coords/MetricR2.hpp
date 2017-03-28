@@ -79,7 +79,7 @@ namespace gbc {
 
                 A[i] = 0.5 * s[i].crossProduct(s[ip]);
                 B[i] = 0.5 * s[im].crossProduct(s[ip]);
-                C[i] = 0.5 * (-e[im].crossProduct(e[i]));
+                C[i] = 0.5 * (e[i].crossProduct(-e[im]));
 
                 q[i] = r[i] + r[ip] - e[i].length();
             }
